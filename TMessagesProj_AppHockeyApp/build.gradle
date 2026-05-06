@@ -180,7 +180,7 @@ android {
     buildFeatures {
         buildConfig = true
     }
-    namespace 'org.telegram.messenger.regular'
+    namespace 'org.telegram.messenger.patched.regular'
 
     lintOptions {
         checkReleaseBuilds false

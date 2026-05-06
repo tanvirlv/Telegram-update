@@ -9209,7 +9209,7 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public void deleteMessages(ArrayList<Integer> messages, ArrayList<Long> randoms, TLRPC.EncryptedChat encryptedChat, long dialogId, boolean forAll, int mode, boolean cacheOnly, long taskId, TLObject taskRequest, int topicId, boolean movedToScheduled, int movedToScheduledMessageId) {
-        if (taskId == 0) return; // PATCHED - ignore remote deletions
+
         final boolean scheduled = mode == ChatActivity.MODE_SCHEDULED;
         final boolean quickReplies = mode == ChatActivity.MODE_QUICK_REPLIES;
         if ((messages == null || messages.isEmpty()) && taskId == 0) {
@@ -16162,6 +16162,11 @@ public class MessagesController extends BaseController implements NotificationCe
                     if (!res.other_updates.isEmpty()) {
                         for (int a = 0; a < res.other_updates.size(); a++) {
                             TLRPC.Update upd = res.other_updates.get(a);
+                            if (upd instanceof TLRPC.TL_updateDeleteMessages || upd instanceof TLRPC.TL_updateDeleteChannelMessages) {
+                                res.other_updates.remove(a);
+                                a--;
+                                continue;
+                            }
                             if (upd instanceof TLRPC.TL_updateMessageID) {
                                 msgUpdates.add((TLRPC.TL_updateMessageID) upd);
                                 res.other_updates.remove(a);
@@ -16819,7 +16824,8 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     protected void deleteMessagesByPush(long dialogId, ArrayList<Integer> ids, long channelId) {
-        return; // PATCHED - ignore remote deletions
+        // PATCHED - ignore remote deletions
+        if (true) return;
         getMessagesStorage().getStorageQueue().postRunnable(() -> {
             AndroidUtilities.runOnUIThread(() -> {
                 getNotificationCenter().postNotificationName(NotificationCenter.messagesDeleted, ids, channelId, false);
@@ -20127,7 +20133,7 @@ public class MessagesController extends BaseController implements NotificationCe
                     getNotificationCenter().postNotificationName(NotificationCenter.messagesReadContent, key, value);
                 }
             }
-            if (deletedMessagesFinal != null) {
+            if (false && deletedMessagesFinal != null) {
                 for (int a = 0, size = deletedMessagesFinal.size(); a < size; a++) {
                     long dialogId = deletedMessagesFinal.keyAt(a);
                     ArrayList<Integer> arrayList = deletedMessagesFinal.valueAt(a);
@@ -20247,7 +20253,7 @@ public class MessagesController extends BaseController implements NotificationCe
                 getMessagesStorage().markMessagesContentAsRead(key, arrayList, currentTime2, markContentAsReadMessagesDate);
             }
         }
-        if (deletedMessages != null) {
+        if (false && deletedMessages != null) {
             for (int a = 0, size = deletedMessages.size(); a < size; a++) {
                 long key = deletedMessages.keyAt(a);
                 ArrayList<Integer> arrayList = deletedMessages.valueAt(a);

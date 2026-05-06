@@ -152,7 +152,7 @@ android {
     buildFeatures {
         buildConfig = true
     }
-    namespace 'org.telegram.messenger.huawei'
+    namespace 'org.telegram.messenger.patched.huawei'
 
     lintOptions {
         checkReleaseBuilds false
